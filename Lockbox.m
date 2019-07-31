@@ -196,7 +196,10 @@ static NSString *_defaultKeyPrefix = nil;
 -(BOOL)archiveObject:(id<NSSecureCoding>)object forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
     NSMutableData *data = [NSMutableData new];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+#pragma clang diagnostic pop
     [archiver encodeObject:object forKey:key];
     [archiver finishEncoding];
     
@@ -211,7 +214,7 @@ static NSString *_defaultKeyPrefix = nil;
 
     id object = nil;
     @try {
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:NULL];
         object = [unarchiver decodeObjectForKey:key];
     }
     @catch (NSException *exception) {
